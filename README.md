@@ -2,18 +2,62 @@
 
 Unified AI image and video generation for Codex and agent workflows.
 
-`multi-provider-media-skill` is a Codex skill and CLI toolkit that routes media generation requests across Qwen, Gemini Imagen, and Agens-AI. It provides one command interface for text-to-image, image-to-image, text-to-video, image-to-video, multi-image video, and keyframe video workflows, with built-in API key rotation, local `.env.local` loading, async task polling, and downloadable outputs.
+`multi-provider-media-skill` is a Codex skill and CLI toolkit for generating images and videos through multiple providers with one unified interface. You can keep the same prompt and switch only `--provider` to compare output styles or route requests across Qwen, Gemini Imagen, Agens-AI, and Wuli.
 
-中文简介：这是一个面向 Codex / Agent 工作流的多模型媒体生成 Skill 和命令行工具，统一封装 Qwen、Gemini Imagen 和 Agens-AI 的图片与视频生成能力。
+中文简介：这是一个面向 Codex / Agent 工作流的多模型媒体生成 Skill 和命令行工具，核心作用是用统一命令接入多个 provider 来生成图片或视频。你可以保持同一段提示词不变，仅切换 `--provider`，直接对比 Qwen、Gemini Imagen、Agens-AI 和 Wuli 的生成效果。
+
+## What This Skill Does | 这个 Skill 是做什么的
+
+This skill solves a simple practical problem: multiple model providers, one command.
+
+- Generate images with different providers using the same prompt
+- Compare provider output quality, style, and prompt understanding
+- Route image or video generation through a consistent CLI entrypoint
+- Manage multiple API keys per provider from one local config file
+
+这个 Skill 主要解决一件事：把多个模型服务商的生成能力统一到一个命令入口里。
+
+- 用同一段提示词切换不同 provider 生成图片
+- 快速比较不同 provider 的画风、稳定性和语义理解
+- 用统一 CLI 调用图片和视频生成能力
+- 在一个本地配置文件里管理多家 provider 的 API key
 
 ## Highlights | 项目亮点
 
 - One CLI entrypoint for multiple providers: `scripts/generate_media.py`
+- Same prompt, different providers, directly comparable outputs
 - Unified routing across image and video workflows
 - Built-in multi-key rotation for provider failover and quota balancing
 - Automatic local env loading from `.env.local`
 - Local output download by default, with URL-only mode where supported
 - Bundled reference docs for API details and prompt writing
+
+## Core Idea | 核心用法
+
+Use the same command shape and change only the provider:
+
+```bash
+python3 scripts/generate_media.py \
+  --provider qwen \
+  --mode t2i \
+  --prompt "怪物史诺克与美国自由女神庆祝和平"
+```
+
+```bash
+python3 scripts/generate_media.py \
+  --provider wuli \
+  --mode t2i \
+  --prompt "怪物史诺克与美国自由女神庆祝和平"
+```
+
+```bash
+python3 scripts/generate_media.py \
+  --provider agens \
+  --mode t2i \
+  --prompt "怪物史诺克与美国自由女神庆祝和平"
+```
+
+这样你就可以在同一个 Skill 下，直接横向比较不同 provider 对同一提示词的生成结果。
 
 ## Supported Providers | 支持的服务商
 
@@ -22,6 +66,7 @@ Unified AI image and video generation for Codex and agent workflows.
 | Qwen | `qwen-image-2.0-pro` | `text-to-image` |
 | Gemini Imagen | `imagen-3.0-generate-002` | `text-to-image` |
 | Agens-AI | `agnes-image-2.1-flash` / `agnes-video-v2.0` | `text-to-image`, `image-to-image`, `text-to-video`, `image-to-video`, `multi-image-video`, `keyframe-video` |
+| Wuli | `Qwen Image Turbo` / `通义万相 2.2 Turbo` | `text-to-image`, `image-to-image`, `text-to-video`, `image-to-video`, `multi-image-video`, `keyframe-video` |
 
 Mode aliases:
 
@@ -111,6 +156,33 @@ python3 scripts/generate_media.py \
   --no-download
 ```
 
+### Wuli image-to-image
+
+```bash
+python3 scripts/generate_media.py \
+  --provider wuli \
+  --mode i2i \
+  --prompt "把这张商品图改成干净的奶油色电商布光，保留主体结构" \
+  --image-url "https://example.com/input.png" \
+  --aspect-ratio 1:1 \
+  --resolution 2K
+```
+
+### Wuli keyframe video
+
+```bash
+python3 scripts/generate_media.py \
+  --provider wuli \
+  --mode kfv \
+  --prompt "让镜头从首帧平滑推进到尾帧，保持电影感和真实光影" \
+  --image-path ./frame-start.png \
+  --image-path ./frame-end.png \
+  --resolution 1080P \
+  --aspect-ratio 16:9 \
+  --video-seconds 5 \
+  --no-download
+```
+
 ### JSON output
 
 ```bash
@@ -151,6 +223,9 @@ $ python3 scripts/generate_media.py \
 - Use `--output-dir` to change the output directory
 - Gemini currently does not support `--no-download`
 - Agens video generation is asynchronous and polled until completion or timeout
+- Wuli tasks are asynchronous and polled until completion or timeout
+- Wuli reference images/videos are auto-uploaded to Wuli OSS before task submission
+- Wuli image references auto-fill `width` / `height` to avoid server-side validation errors
 - `.env.local`, `.venv/`, `generated_images/`, and `__pycache__/` should not be committed
 
 ## Documentation | 参考文档

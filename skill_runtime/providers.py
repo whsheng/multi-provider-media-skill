@@ -26,3 +26,10 @@ AGENS_PROVIDER = ProviderConfig(
     single_key_envs=("AGENS_AI_API_KEY", "AGENS_API_KEY"),
     multi_key_envs=("AGENS_AI_API_KEYS", "AGENS_API_KEYS"),
 )
+
+WULI_PROVIDER = ProviderConfig(
+    name="Wuli",
+    base_url="https://platform.wuli.art",
+    single_key_envs=("WULI_API_KEY", "WULI_API_TOKEN"),
+    multi_key_envs=("WULI_API_KEYS", "WULI_API_TOKENS"),
+)

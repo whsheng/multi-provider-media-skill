@@ -1,8 +1,8 @@
 ---
 name: multi-provider-media-skill
 description: This skill provides image and video generation capabilities using
-  Qwen (通义千问), Gemini Imagen, and Agens-AI APIs. Use this skill when users
-  request text-to-image, image-to-image, text-to-video, image-to-video, or
+  Qwen (通义千问), Gemini Imagen, Agens-AI, and Wuli APIs. Use this skill when
+  users request text-to-image, image-to-image, text-to-video, image-to-video, or
   similar media generation tasks, such as "生成一张图片"、"画一张图"、"生成一个视频"、"create an
   image", "generate a picture", or when they provide prompts or image URLs they
   want transformed into media.
@@ -22,7 +22,7 @@ disable: false
 
 核心调用方式:
 
-- `--provider qwen|gemini|agens`
+- `--provider qwen|gemini|agens|wuli`
 - `--mode text-to-image|image-to-image|text-to-video|image-to-video|multi-image-video|keyframe-video`
 
 示例:
