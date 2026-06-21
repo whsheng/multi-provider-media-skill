@@ -1,53 +1,21 @@
 # multi-provider-media-skill
 
-`multi-provider-media-skill` is a Codex skill and CLI toolkit for multi-provider AI image and video generation. It unifies Qwen, Gemini Imagen, and Agens-AI behind one command interface, with API key rotation, local `.env.local` loading, async task polling, and downloadable outputs.
+Unified AI image and video generation for Codex and agent workflows.
 
-`multi-provider-media-skill` 是一个面向 Codex/Agent 工作流的多模型图片与视频生成 Skill 和命令行工具。它把 Qwen、Gemini Imagen 和 Agens-AI 统一到一个调用入口下，并内置 API Key 轮询、`.env.local` 自动加载、异步任务轮询和本地结果下载能力。
+`multi-provider-media-skill` is a Codex skill and CLI toolkit that routes media generation requests across Qwen, Gemini Imagen, and Agens-AI. It provides one command interface for text-to-image, image-to-image, text-to-video, image-to-video, multi-image video, and keyframe video workflows, with built-in API key rotation, local `.env.local` loading, async task polling, and downloadable outputs.
 
-## Features | 功能
+中文简介：这是一个面向 Codex / Agent 工作流的多模型媒体生成 Skill 和命令行工具，统一封装 Qwen、Gemini Imagen 和 Agens-AI 的图片与视频生成能力。
 
-- Unified CLI entry: `scripts/generate_media.py`
-- Providers: `Qwen`, `Gemini Imagen`, `Agens-AI`
-- Modes: text-to-image, image-to-image, text-to-video, image-to-video, multi-image video, keyframe video
-- Built-in multi-key rotation and local output download
-- Auto-loads `.env.local` from the project root
+## Highlights | 项目亮点
 
-## Quick Start | 快速开始
+- One CLI entrypoint for multiple providers: `scripts/generate_media.py`
+- Unified routing across image and video workflows
+- Built-in multi-key rotation for provider failover and quota balancing
+- Automatic local env loading from `.env.local`
+- Local output download by default, with URL-only mode where supported
+- Bundled reference docs for API details and prompt writing
 
-### Install | 安装
-
-```bash
-uv sync
-```
-
-Or use `pip`:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Configure API keys | 配置 API Key
-
-```bash
-cp .env.local.example .env.local
-```
-
-Then fill in the keys you actually use in `.env.local`.
-
-然后把你实际使用的 API Key 填进 `.env.local`。
-
-### Run | 运行
-
-```bash
-python3 scripts/generate_media.py \
-  --provider qwen \
-  --mode t2i \
-  --prompt "一只戴眼镜的小橘猫在图书馆看书，电影感，细节丰富"
-```
-
-## Providers And Modes | 支持的服务与模式
+## Supported Providers | 支持的服务商
 
 | Provider | Default model | Modes |
 |---|---|---|
@@ -64,7 +32,51 @@ Mode aliases:
 - `m2v` = `multi-image-video`
 - `kfv` = `keyframe-video`
 
+## Quick Start | 快速开始
+
+### 1. Install | 安装
+
+```bash
+uv sync
+```
+
+Or with `pip`:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Configure API keys | 配置 API Key
+
+```bash
+cp .env.local.example .env.local
+```
+
+Fill in only the keys you actually use. The scripts auto-load `.env.local` from the project root.
+
+把你实际使用的 API Key 填入 `.env.local` 即可，脚本会自动加载该文件。
+
+### 3. Run | 运行
+
+```bash
+python3 scripts/generate_media.py \
+  --provider qwen \
+  --mode t2i \
+  --prompt "一只戴眼镜的小橘猫在图书馆看书，电影感，细节丰富"
+```
+
 ## Examples | 示例
+
+### Qwen text-to-image
+
+```bash
+python3 scripts/generate_media.py \
+  --provider qwen \
+  --mode t2i \
+  --prompt "一只戴眼镜的小橘猫在图书馆看书，电影感，细节丰富"
+```
 
 ### Gemini text-to-image
 
@@ -109,12 +121,29 @@ python3 scripts/generate_media.py \
   --json
 ```
 
-## Repository Layout | 目录结构
+## Sample Output | 输出示例
+
+```text
+$ python3 scripts/generate_media.py \
+    --provider qwen \
+    --mode t2i \
+    --prompt "一只戴眼镜的小橘猫在图书馆看书，电影感，细节丰富"
+
+🎨 正在调用 Qwen-Image API...
+   模型: qwen-image-2.0-pro
+   提示词: 一只戴眼镜的小橘猫在图书馆看书，电影感，细节丰富...
+   尺寸: 2048*2048
+   数量: 1
+📥 正在下载 1 张图片...
+   ✅ 保存到: ./generated_images/qwen_qwen-image-2.0-pro_20260621_170000_1.png
+```
+
+## Repository Layout | 仓库结构
 
 - `scripts/`: CLI entrypoints and provider-specific generators
 - `skill_runtime/`: shared runtime, HTTP client, env loading, key rotation, media download
 - `references/`: API notes and prompt-writing guides
-- `SKILL.md`: Codex skill definition
+- `SKILL.md`: Codex skill metadata and usage instructions
 
 ## Notes | 说明
 
@@ -124,7 +153,7 @@ python3 scripts/generate_media.py \
 - Agens video generation is asynchronous and polled until completion or timeout
 - `.env.local`, `.venv/`, `generated_images/`, and `__pycache__/` should not be committed
 
-## References | 参考资料
+## Documentation | 参考文档
 
 - [references/api_reference.md](references/api_reference.md)
 - [references/prompt_guide.md](references/prompt_guide.md)
