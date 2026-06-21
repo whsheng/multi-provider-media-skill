@@ -1,0 +1,13 @@
+.env.local
+.venv/
+.runtime/
+
+# Python cache / build artifacts
+__pycache__/
+*.py[cod]
+
+# Generated outputs
+generated_images/
+
+# Local OS/editor files
+.DS_Store
